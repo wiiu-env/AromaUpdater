@@ -51,7 +51,6 @@ void MainApplicationState::render() {
         printFooter();
     }
 
-
     DrawUtils::endDraw();
 }
 
@@ -74,7 +73,7 @@ ApplicationState::eSubState MainApplicationState::update(Input *input) {
         } else if (retSubState == SUBSTATE_RETURN) {
             this->subState.reset();
             this->state = STATE_WELCOME_SCREEN;
-        } else if (retSubState == SUBSTATE_SHUTDOWN) {
+        } else if (retSubState == SUBSTATE_RESTART) {
             this->subState.reset();
             this->state = STATE_SHUTDOWN;
         }

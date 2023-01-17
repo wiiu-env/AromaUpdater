@@ -11,7 +11,7 @@ public:
     enum eSubState {
         SUBSTATE_RUNNING,
         SUBSTATE_RETURN,
-        SUBSTATE_SHUTDOWN,
+        SUBSTATE_RESTART,
     };
 
     virtual ~ApplicationState() = default;
