@@ -2,10 +2,11 @@
 
 # Aroma Updater
 
-## Usage
-(`[ENVIRONMENT]` is a placeholder for the actual environment name.)
+The Aroma Updater can be used to update (or install) "packages" from https://aroma.foryour.cafe/ directly on your console. 
 
-1. Copy the file `AromaUpdater.wuhb` into `sd:/wiiu/apps/updater/AromaUpdater.wuhb`.
+## Usage
+
+1. Copy the file `AromaUpdater.wuhb` into `sd:/wiiu/apps/AromaUpdater.wuhb`.
 2. Run the Updater via Aroma (e.g. from the Wii U Menu).
 
 ## Buildflags
@@ -37,3 +38,7 @@ docker run -it --rm -v ${PWD}:/project aromaupdater-builder make clean
 ## Format the code via docker
 
 `docker run --rm -v ${PWD}:/src wiiuenv/clang-format:13.0.0-2 -r ./source --exclude ./source/utils/json.hpp -i`
+
+## Credits
+
+- Thanks Ingunar for the logo
