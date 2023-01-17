@@ -30,7 +30,7 @@ void UpdaterState::setError(UpdaterState::eErrorState err) {
     this->mErrorState = err;
 }
 
-extern "C" void OSShutdown();
+extern "C" void OSLaunchTitlel(uint32_t, uint32_t, int, void *);
 
 ApplicationState::eSubState UpdaterState::update(Input *input) {
     switch (this->mState) {
@@ -150,8 +150,8 @@ ApplicationState::eSubState UpdaterState::update(Input *input) {
         }
         case STATE_UPDATE_SUCCESS: {
             if (buttonPressed(input, Input::BUTTON_A)) {
-                OSShutdown();
-                return SUBSTATE_SHUTDOWN;
+                OSLaunchTitlel(0xffffffff, 0xfffffffe, 0, nullptr);
+                return SUBSTATE_RESTART;
             }
             break;
         }
@@ -253,9 +253,9 @@ void UpdaterState::render() {
         case STATE_UPDATE_SUCCESS: {
             DrawUtils::setFontSize(20);
             DrawUtils::print(16, 80, "All files have been updated successfully.");
-            DrawUtils::print(16, 100, "The console will now shutdown.");
+            DrawUtils::print(16, 100, "The console will now restart.");
             DrawUtils::setFontSize(18);
-            DrawUtils::print(SCREEN_WIDTH - 16, SCREEN_HEIGHT - 14, "\ue000 Shutdown", true);
+            DrawUtils::print(SCREEN_WIDTH - 16, SCREEN_HEIGHT - 14, "\ue000 Restart", true);
             break;
         }
     }
