@@ -28,11 +28,16 @@ int DownloadFilesThreadEntry(UpdaterState *updater) {
             int responseCode;
             updater->mProgress = 0.0f;
             DEBUG_FUNCTION_LINE("Download %s", curURL.c_str());
-            if (DownloadUtils::DownloadFileToBuffer(curURL.c_str(), downloadedZIP, responseCode, &updater->mProgress) < 0 || responseCode != 200) {
+            int errorCode;
+            std::string errorText;
+            if (DownloadUtils::DownloadFileToBuffer(curURL, downloadedZIP, responseCode, errorCode, errorText, &updater->mProgress) < 0 || responseCode != 200) {
                 DEBUG_FUNCTION_LINE_ERR("Download failed");
                 {
                     std::lock_guard<std::mutex> lockInfo(updater->mDownloadInfosLock);
-                    updater->mDownloadInfos->state = DownloadInfos::DOWNLOAD_FAILED;
+                    updater->mDownloadInfos->state        = DownloadInfos::DOWNLOAD_FAILED;
+                    updater->mDownloadInfos->errorCode    = errorCode;
+                    updater->mDownloadInfos->errorText    = errorText;
+                    updater->mDownloadInfos->responseCode = responseCode;
                     OSMemoryBarrier();
                     return 0;
                 }
@@ -138,6 +143,11 @@ ApplicationState::eSubState UpdaterState::UpdateProcessDownloadFiles(Input *inpu
             this->mState = STATE_UPDATE_PROCESS_DOWNLOAD_FILES_FINISHED;
             break;
         case DownloadInfos::DOWNLOAD_FAILED:
+            if (this->mDownloadInfos) {
+                this->mResponseCode      = this->mDownloadInfos->responseCode;
+                this->mDownloadErrorCode = this->mDownloadInfos->errorCode;
+                this->mDownloadErrorText = this->mDownloadInfos->errorText;
+            }
             setError(ERROR_DOWNLOAD_FAILED);
             break;
         case DownloadInfos::DOWNLOAD_EXTRACT_FAILED:

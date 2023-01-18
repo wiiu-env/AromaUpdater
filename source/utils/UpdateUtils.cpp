@@ -46,7 +46,9 @@ void UpdateUtils::CheckFilesOfVersionInfo(VersionCheck::VersionInfo &versionInfo
 
                                 std::string url = string_format("%s/api/check_versions?hash=%s", serverURL.c_str(), hashOfFileOnSDCard->c_str());
                                 DEBUG_FUNCTION_LINE("Check version of file with hash %s", hashOfFileOnSDCard->c_str());
-                                if (DownloadUtils::DownloadFileToBuffer(url.c_str(), outBuffer2, responseCode, nullptr) < 0 &&
+                                int errorOut;
+                                std::string errorTextOut;
+                                if (DownloadUtils::DownloadFileToBuffer(url.c_str(), outBuffer2, responseCode, errorOut, errorTextOut, nullptr) < 0 &&
                                     responseCode == 200) {
                                     DEBUG_FUNCTION_LINE("Failed to get information for the file");
                                     file.setStatus(VersionCheck::FileStatus::Error);
