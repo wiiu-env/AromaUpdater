@@ -31,7 +31,7 @@ int DownloadFilesThreadEntry(UpdaterState *updater) {
             int errorCode;
             std::string errorText;
             if (DownloadUtils::DownloadFileToBuffer(curURL, downloadedZIP, responseCode, errorCode, errorText, &updater->mProgress) < 0 || responseCode != 200) {
-                DEBUG_FUNCTION_LINE_ERR("Download failed");
+                DEBUG_FUNCTION_LINE_ERR("Download failed for %s. curl error code %d, error text %s, response code: %d", curURL.c_str(), errorCode, errorText.c_str(), responseCode);
                 {
                     std::lock_guard<std::mutex> lockInfo(updater->mDownloadInfosLock);
                     updater->mDownloadInfos->state        = DownloadInfos::DOWNLOAD_FAILED;
@@ -89,7 +89,7 @@ int DownloadFilesThreadEntry(UpdaterState *updater) {
         }
 
         if (!found) {
-            DEBUG_FUNCTION_LINE_ERR("Failed to find file in zip");
+            DEBUG_FUNCTION_LINE_ERR("Failed to find with hash %s in zip (%s)", curFile.getSha1().c_str(), curURL.c_str());
             {
                 std::lock_guard<std::mutex> lockInfo(updater->mDownloadInfosLock);
                 updater->mDownloadInfos->state = DownloadInfos::DOWNLOAD_NOT_FOUND_IN_ZIP;
