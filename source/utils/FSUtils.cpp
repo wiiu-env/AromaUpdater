@@ -139,7 +139,7 @@ int32_t CreateSubfolder(const char *fullpath) {
 int32_t saveBufferToFile(const char *path, void *buffer, uint32_t size) {
     int fd = open(path, O_CREAT | O_TRUNC | O_WRONLY);
     if (fd < 0) {
-        DEBUG_FUNCTION_LINE_ERR("Failed to open %s", path);
+        DEBUG_FUNCTION_LINE_ERR("Failed to open %s. %d", path, fd);
         return -1;
     }
     auto sizeToWrite = size;
