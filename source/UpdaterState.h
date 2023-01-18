@@ -26,7 +26,6 @@
 #include <string>
 #include <thread>
 
-
 class DownloadInfos {
 public:
     explicit DownloadInfos(uint32_t totalFiles) : totalFiles(totalFiles) {
@@ -51,6 +50,9 @@ public:
     std::optional<VersionCheck::RepositoryFile> curFile;
     eProcessStep processStep = STEP_DOWNLOAD;
     eDownloadFileState state = DOWNLOAD_RUNNING;
+    int errorCode            = {};
+    int responseCode         = {};
+    std::string errorText    = {};
 };
 
 class UpdaterState : public ApplicationState {
@@ -127,9 +129,13 @@ public:
 
     std::mutex mVersionBufferLock;
     std::string mVersionBuffer;
+    int mResponseCode;
     eErrorState mErrorState;
 
     VersionCheck::VersionInfo mVersionInfo;
+
+    int mDownloadErrorCode;
+    std::string mDownloadErrorText;
 
     bool mOnlyRequired         = false;
     int32_t mTotalPackageCount = 0;

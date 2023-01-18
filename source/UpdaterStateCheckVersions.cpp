@@ -9,9 +9,14 @@
 
 int DownloadVersionInfoThreadEntry(UpdaterState *updater) {
     std::lock_guard<std::mutex> lock(updater->mVersionBufferLock);
-    int responseCode;
     updater->mProgress = 0.0f;
-    if (DownloadUtils::DownloadFileToBuffer(UPDATE_SERVER_URL "/api/check_versions", updater->mVersionBuffer, responseCode, &updater->mProgress) < 0 || responseCode != 200) {
+    if (DownloadUtils::DownloadFileToBuffer(UPDATE_SERVER_URL "/api/check_versions",
+                                            updater->mVersionBuffer,
+                                            updater->mResponseCode,
+                                            updater->mDownloadErrorCode,
+                                            updater->mDownloadErrorText,
+                                            &updater->mProgress) < 0 ||
+        updater->mResponseCode != 200) {
         DEBUG_FUNCTION_LINE_ERR("Error while downloading");
         updater->mDownloadInfoResult = UpdaterState::DOWNLOAD_FAILED;
     } else {

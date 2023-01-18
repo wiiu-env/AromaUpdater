@@ -90,7 +90,7 @@ void DownloadUtils::Deinit() {
     libInitDone = false;
 }
 
-int DownloadUtils::DownloadFileToBuffer(const char *url, std::string &outBuffer, int &responseCodeOut, float *progress) {
+int DownloadUtils::DownloadFileToBuffer(const std::string &url, std::string &outBuffer, int &responseCodeOut, int &errorOut, std::string &errorTextOut, float *progress) {
     if (!libInitDone) {
         return -1;
     }
@@ -102,7 +102,6 @@ int DownloadUtils::DownloadFileToBuffer(const char *url, std::string &outBuffer,
         return -1;
     }
 
-
     if (cacert_pem != nullptr) {
         struct curl_blob blob {};
         blob.data  = (void *) cacert_pem;
@@ -112,6 +111,8 @@ int DownloadUtils::DownloadFileToBuffer(const char *url, std::string &outBuffer,
         // Use the certificate bundle in the data
         curl_easy_setopt(curl, CURLOPT_CAINFO_BLOB, &blob);
     } else {
+        errorOut     = 0x13371337;
+        errorTextOut = "cacert.pem is not loaded";
         DEBUG_FUNCTION_LINE_ERR("Warning, missing certificate.");
         return -4;
     }
@@ -123,7 +124,7 @@ int DownloadUtils::DownloadFileToBuffer(const char *url, std::string &outBuffer,
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
     // Set the download URL
-    curl_easy_setopt(curl, CURLOPT_URL, url);
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
     if (progress != nullptr) {
         /* pass struct to callback  */
@@ -135,15 +136,20 @@ int DownloadUtils::DownloadFileToBuffer(const char *url, std::string &outBuffer,
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *) &outBuffer);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &writeCallback);
 
-    if (curl_easy_perform(curl) != CURLE_OK) {
+    char error[CURL_ERROR_SIZE]; /* needs to be at least this big */
+    curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, error);
+
+    errorTextOut = {};
+    errorOut     = 0;
+
+    responseCodeOut = -1;
+    if ((errorOut = curl_easy_perform(curl)) != CURLE_OK) {
+        errorTextOut = error;
         curl_easy_cleanup(curl);
         curl_global_cleanup();
         return -1;
     }
-
-    int32_t response_code;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-    responseCodeOut = response_code;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &responseCodeOut);
 
     curl_easy_cleanup(curl);
 

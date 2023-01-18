@@ -1,5 +1,6 @@
 #include "UpdaterState.h"
 #include "common.h"
+#include "utils/DownloadUtils.h"
 #include "utils/UpdateUtils.h"
 #include <coreinit/cache.h>
 
@@ -12,6 +13,22 @@ void UpdaterState::RenderError() {
     if (this->mErrorState == ERROR_FAILED_COPY_FILES) {
         DrawUtils::print(16, 160, "Your Aroma installation might has been corrupted. Please re-download Aroma");
         DrawUtils::print(16, 180, "from " AROMA_DOWNLOAD_URL " and replace the files on the sd card.");
+    } else if (this->mErrorState == ERROR_FAILED_TO_DOWNLOAD_VERSIONS || this->mErrorState == ERROR_DOWNLOAD_FAILED) {
+        if (this->mResponseCode != -1) {
+            DrawUtils::printf(16, 160, false, "Response code was %d", mResponseCode);
+        } else {
+            DrawUtils::printf(16, 160, false, "libcurl error code %d", mDownloadErrorCode);
+            DrawUtils::printf(16, 180, false, "(%s)", mDownloadErrorText.c_str());
+            if (mDownloadErrorCode == 60 && (mDownloadErrorText.find("BADCERT_FUTURE") != std::string::npos || mDownloadErrorText.find("BADCERT_EXPIRED") != std::string::npos)) {
+                time_t now = time(nullptr);
+                DrawUtils::printf(16, 220, false, "Make sure your console has the correct date");
+                DrawUtils::printf(16, 240, false, "Date of the console: %s", ctime(&now));
+            } else if (mDownloadErrorCode == 0x13371337) {
+                DrawUtils::printf(16, 220, false, "Make sure to load this updater as .wuhb, not .rpx");
+            } else if (mDownloadErrorCode == 6) {
+                DrawUtils::printf(16, 220, false, "Please check the internet connection of your console.");
+            }
+        }
     }
 
     DrawUtils::setFontSize(18);
