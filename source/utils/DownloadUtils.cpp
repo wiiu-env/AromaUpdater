@@ -64,6 +64,8 @@ bool DownloadUtils::Init() {
         return false;
     }
 
+    cacert_pem      = nullptr;
+    cacert_pem_size = 0;
     if (LoadFileToMem(CERT_FILE_LOCATION, &cacert_pem, &cacert_pem_size) < 0) {
         DEBUG_FUNCTION_LINE_ERR("Failed to load cert");
         cacert_pem      = nullptr;
@@ -79,9 +81,11 @@ void DownloadUtils::Deinit() {
         return;
     }
 
-    free(cacert_pem);
-    cacert_pem      = nullptr;
-    cacert_pem_size = 0;
+    if (cacert_pem != nullptr) {
+        free(cacert_pem);
+        cacert_pem      = nullptr;
+        cacert_pem_size = 0;
+    }
     curl_global_cleanup();
     libInitDone = false;
 }
