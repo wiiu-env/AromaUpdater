@@ -46,6 +46,12 @@ ApplicationState::eSubState UpdaterState::update(Input *input) {
         case STATE_PARSE_VERSIONS: {
             return UpdaterState::UpdateParseVersions(input);
         }
+        case STATE_GET_ENVIRONMENT_DIRECTORY: {
+            return UpdaterState::UpdateGetEnvironmentDirectory(input);
+        }
+        case STATE_CHECK_ENVIRONMENT_DIRECTORY: {
+            return UpdaterState::UpdateCheckEnvironmentDirectory(input);
+        }
         case STATE_CHECK_VERSIONS: {
             return UpdaterState::UpdateCheckVersions(input);
         }
@@ -181,6 +187,13 @@ void UpdaterState::render() {
             DrawUtils::print(16, 80, "Parsing the latest versions...");
             break;
         }
+        case STATE_GET_ENVIRONMENT_DIRECTORY: {
+            break;
+        };
+        case STATE_CHECK_ENVIRONMENT_DIRECTORY: {
+            UpdaterState::RenderCheckEnvironmentDirectory();
+            break;
+        };
         case STATE_CHECK_VERSIONS: {
             DrawUtils::setFontColor(COLOR_WHITE);
             DrawUtils::setFontSize(20);

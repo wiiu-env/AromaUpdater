@@ -7,6 +7,7 @@
 #include "utils/logger.h"
 #include <coreinit/energysaver.h>
 #include <filesystem>
+#include <mocha/mocha.h>
 #include <sndcore2/core.h>
 #include <whb/proc.h>
 
@@ -53,6 +54,11 @@ int main() {
         OSFatal("Failed to init DownloadUtils");
     }
 
+    int mochaInitResult;
+    if ((mochaInitResult = Mocha_InitLibrary()) != MOCHA_RESULT_SUCCESS) {
+        DEBUG_FUNCTION_LINE_ERR("Mocha_InitLibrary() failed %d", mochaInitResult);
+    }
+
     uint32_t isAPDEnabled;
     IMIsAPDEnabled(&isAPDEnabled);
 
@@ -66,6 +72,10 @@ int main() {
     if (isAPDEnabled) {
         DEBUG_FUNCTION_LINE_VERBOSE("Enable auto shutdown");
         IMEnableAPD();
+    }
+
+    if (mochaInitResult == MOCHA_RESULT_SUCCESS) {
+        Mocha_DeInitLibrary();
     }
 
     DownloadUtils::Deinit();
