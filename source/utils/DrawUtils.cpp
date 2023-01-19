@@ -88,6 +88,7 @@ void DrawUtils::DeInit() {
         }
     }
     glyphCache.clear();
+    deinitFont();
 }
 
 void DrawUtils::beginDraw() {
