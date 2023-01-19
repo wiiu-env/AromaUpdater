@@ -77,7 +77,7 @@ ApplicationState::eSubState UpdaterState::UpdateParseVersions(Input *input) {
         this->setError(ERROR_FAILED_TO_PARSE_VERSIONS);
         return SUBSTATE_RUNNING;
     }
-    this->mState = STATE_CHECK_VERSIONS;
+    this->mState = STATE_GET_ENVIRONMENT_DIRECTORY;
     return SUBSTATE_RUNNING;
 }
 

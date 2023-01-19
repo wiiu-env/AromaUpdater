@@ -61,6 +61,8 @@ public:
         STATE_ERROR,
         STATE_DOWNLOAD_VERSIONS,
         STATE_PARSE_VERSIONS,
+        STATE_GET_ENVIRONMENT_DIRECTORY,
+        STATE_CHECK_ENVIRONMENT_DIRECTORY,
         STATE_CHECK_VERSIONS,
         STATE_SHOW_VERSIONS,
         STATE_SELECTED_PACKAGES_EMPTY,
@@ -106,6 +108,7 @@ public:
 
     void RenderError();
     void RenderDownloadVersions();
+    void RenderCheckEnvironmentDirectory();
     void RenderShowVersions();
     void RenderConfirmPackages();
     void RenderCheckIndividualFile();
@@ -113,6 +116,8 @@ public:
 
     ApplicationState::eSubState UpdateProcessDownloadFiles(Input *input);
     ApplicationState::eSubState UpdateDownloadVersions(Input *input);
+    ApplicationState::eSubState UpdateGetEnvironmentDirectory(Input *input);
+    ApplicationState::eSubState UpdateCheckEnvironmentDirectory(Input *input);
     ApplicationState::eSubState UpdateParseVersions(Input *input);
     ApplicationState::eSubState UpdateCheckVersions(Input *input);
     ApplicationState::eSubState UpdateShowVersionsMenu(Input *input);
@@ -149,6 +154,8 @@ public:
     std::optional<DownloadInfos> mDownloadInfos;
 
     std::optional<VersionCheck::RepositoryFile> mCurFile = {};
+
+    std::string mCurEnvironmentPath = {};
 
     std::mutex mVersionInfoLock;
     std::thread *mCheckFilesThread    = nullptr;
