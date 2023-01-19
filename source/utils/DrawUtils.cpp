@@ -121,6 +121,9 @@ void DrawUtils::clear(Color col) {
 }
 
 void DrawUtils::drawPixel(uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+    if (a == 0) {
+        return;
+    }
     float opacity = a / 255.0f;
 
     // put pixel in the drc buffer
@@ -302,6 +305,9 @@ void DrawUtils::setFontColor(Color col) {
 }
 
 static void draw_freetype_bitmap(SFT_Image *bmp, int32_t x, int32_t y) {
+    if (font_col.a == 0) {
+        return;
+    }
     int32_t i, j, p, q;
 
     int32_t x_max = x + bmp->width;
@@ -312,6 +318,9 @@ static void draw_freetype_bitmap(SFT_Image *bmp, int32_t x, int32_t y) {
     for (i = x, p = 0; i < x_max; i++, p++) {
         for (j = y, q = 0; j < y_max; j++, q++) {
             if (i < 0 || j < 0 || i >= SCREEN_WIDTH || j >= SCREEN_HEIGHT) {
+                continue;
+            }
+            if (src[q * bmp->width + p] == 0) {
                 continue;
             }
 
