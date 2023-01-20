@@ -19,6 +19,7 @@ ApplicationState::eSubState UpdaterState::UpdateGetEnvironmentDirectory(Input *i
 ApplicationState::eSubState UpdaterState::UpdateCheckEnvironmentDirectory(Input *input) {
     if (this->mCurEnvironmentPath == DEFAULT_AROMA_ENVIRONMENT_SD_PATH) {
         this->mState = STATE_CHECK_VERSIONS;
+        return SUBSTATE_RUNNING;
     }
     if (buttonPressed(input, Input::BUTTON_A)) {
         std::string sNeedle  = DEFAULT_AROMA_ENVIRONMENT_PATH;
@@ -53,7 +54,7 @@ ApplicationState::eSubState UpdaterState::UpdateCheckEnvironmentDirectory(Input 
 }
 
 void UpdaterState::RenderCheckEnvironmentDirectory() {
-    if (this->mCurEnvironmentPath != DEFAULT_AROMA_ENVIRONMENT_PATH) {
+    if (!this->mCurEnvironmentPath.empty() && this->mCurEnvironmentPath != DEFAULT_AROMA_ENVIRONMENT_SD_PATH) {
         DrawUtils::setFontColor(COLOR_RED);
         DrawUtils::setFontSize(30);
         DrawUtils::print(16, 90, "Warning");
