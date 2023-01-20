@@ -11,7 +11,7 @@ void UpdaterState::RenderError() {
     DrawUtils::setFontSize(20);
     DrawUtils::print(16, 120, ErrorMessage());
     if (this->mErrorState == ERROR_FAILED_COPY_FILES) {
-        DrawUtils::print(16, 160, "Your Aroma installation might has been corrupted. Please re-download Aroma");
+        DrawUtils::print(16, 160, "Your Aroma installation might have been corrupted. Please re-download Aroma");
         DrawUtils::print(16, 180, "from " AROMA_DOWNLOAD_URL " and replace the files on the sd card.");
     } else if (this->mErrorState == ERROR_FAILED_TO_DOWNLOAD_VERSIONS || this->mErrorState == ERROR_DOWNLOAD_FAILED) {
         if (this->mResponseCode != -1) {
