@@ -137,6 +137,7 @@ int DownloadUtils::DownloadFileToBuffer(const std::string &url, std::string &out
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &writeCallback);
 
     char error[CURL_ERROR_SIZE]; /* needs to be at least this big */
+    memset(error, 0, sizeof(error));
     curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, error);
 
     errorTextOut = {};
