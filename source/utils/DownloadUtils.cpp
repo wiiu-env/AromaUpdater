@@ -147,7 +147,6 @@ int DownloadUtils::DownloadFileToBuffer(const std::string &url, std::string &out
     if ((errorOut = curl_easy_perform(curl)) != CURLE_OK) {
         errorTextOut = error;
         curl_easy_cleanup(curl);
-        curl_global_cleanup();
         return -1;
     }
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &responseCodeOut);
