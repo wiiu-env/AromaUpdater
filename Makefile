@@ -63,7 +63,7 @@ CXXFLAGS += -DDEBUG -DVERBOSE_DEBUG -g
 CFLAGS += -DDEBUG -DVERBOSE_DEBUG -g
 endif
 
-LIBS	:=-lcurl -lmbedtls -lmbedx509 -lmbedcrypto -lz -lmocha -lwut
+LIBS	:=-lcurl -lmbedtls -lmbedx509 -lmbedcrypto -lz -lmocha -lrpxloader -lwut
 
 #-------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level
