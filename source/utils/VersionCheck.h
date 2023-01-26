@@ -454,6 +454,14 @@ namespace VersionCheck {
             }
             return res;
         }
+
+        const size_t getPackagesCount(bool required) const {
+            size_t result = 0;
+            for (auto &cur : category) {
+                result += cur.getPackagesCount(required);
+            }
+            return result;
+        }
     };
 
     using VersionInfo = std::vector<BaseCategory>;
