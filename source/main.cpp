@@ -8,6 +8,7 @@
 #include <coreinit/energysaver.h>
 #include <filesystem>
 #include <mocha/mocha.h>
+#include <rpxloader/rpxloader.h>
 #include <sndcore2/core.h>
 #include <whb/proc.h>
 
@@ -57,6 +58,16 @@ int main() {
     int mochaInitResult;
     if ((mochaInitResult = Mocha_InitLibrary()) != MOCHA_RESULT_SUCCESS) {
         DEBUG_FUNCTION_LINE_ERR("Mocha_InitLibrary() failed %d", mochaInitResult);
+    }
+
+    RPXLoaderStatus resRPX;
+    if ((resRPX = RPXLoader_InitLibrary()) == RPX_LOADER_RESULT_SUCCESS) {
+        if ((resRPX = RPXLoader_UnmountCurrentRunningBundle()) != RPX_LOADER_RESULT_SUCCESS) {
+            DEBUG_FUNCTION_LINE_ERR("RPXLoader_UnmountCurrentRunningBundle failed: %d, %s", resRPX, RPXLoader_GetStatusStr(resRPX));
+        }
+        RPXLoader_DeInitLibrary();
+    } else {
+        DEBUG_FUNCTION_LINE_ERR("RPXLoader_InitLibrary failed %d %s", resRPX, RPXLoader_GetStatusStr(resRPX));
     }
 
     uint32_t isAPDEnabled;

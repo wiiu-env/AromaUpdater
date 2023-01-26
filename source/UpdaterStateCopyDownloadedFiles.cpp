@@ -96,6 +96,7 @@ bool RenameCurrentToOld(const std::vector<VersionCheck::RepositoryFile> &filesTo
             // rename file to ".temp.old"
             DEBUG_FUNCTION_LINE("Rename %s to %s", pathOnSDCard.c_str(), pathOnSDCardOld.c_str());
             if (rename(pathOnSDCard.c_str(), pathOnSDCardOld.c_str()) < 0) {
+                DEBUG_FUNCTION_LINE_ERR("Failed to rename %s to %s", pathOnSDCard.c_str(), pathOnSDCardOld.c_str());
                 allSuccessful = false;
                 break;
             }
