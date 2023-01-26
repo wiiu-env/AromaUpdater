@@ -8,27 +8,26 @@ ApplicationState::eSubState UpdaterState::UpdateShowVersionsMenu(Input *input) {
     if (selectedOptionX != oldX) {
         selectedOptionY = 0;
     } else {
-        proccessMenuNavigationY(input, mTotalPackageCount);
+        auto &curPage = mVersionInfo[selectedOptionX];
+        proccessMenuNavigationY(input, curPage.getPackagesCount(mOnlyRequired));
     }
 
     int32_t offset = 0;
     bool stop      = false;
     if (entrySelected(input)) {
-        for (auto &base : mVersionInfo) {
+        auto &curPage = mVersionInfo[selectedOptionX];
+        for (auto &cat : curPage.getMutableCategory()) {
             if (stop) { break; }
-            for (auto &cat : base.getMutableCategory()) {
-                if (stop) { break; }
-                for (auto &package : cat.getMutablePackages()) {
-                    if (!package.getRequired() && mOnlyRequired) {
-                        continue;
-                    }
-                    if (offset == selectedOptionY) {
-                        package.toggleSelect();
-                        stop = true;
-                        break;
-                    }
-                    offset++;
+            for (auto &package : cat.getMutablePackages()) {
+                if (!package.getRequired() && mOnlyRequired) {
+                    continue;
                 }
+                if (offset == selectedOptionY) {
+                    package.toggleSelect();
+                    stop = true;
+                    break;
+                }
+                offset++;
             }
         }
     }
