@@ -11,5 +11,5 @@
 #define UPDATE_OLD_SUFFIX                 ".update.old"
 #define UPDATE_TEMP_SUFFIX                ".update.temp"
 
-#define UPDATER_VERSION                   "v0.2.1"
+#define UPDATER_VERSION                   "v0.2.2"
 #define UPDATER_VERSION_FULL              UPDATER_VERSION UPDATER_VERSION_EXTRA
