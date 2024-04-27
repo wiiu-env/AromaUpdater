@@ -36,6 +36,7 @@ TARGET		:=	AromaUpdater
 BUILD		:=	build
 SOURCES		:=	source \
 				source/utils
+DATA		:=  data
 INCLUDES	:=	include
 CONTENT		:=  data
 ICON		:=  meta/icon.png
@@ -180,6 +181,11 @@ $(OFILES_SRC)	: $(HFILES_BIN)
 # you need a rule like this for each extension you use as binary data
 #-------------------------------------------------------------------------------
 %.bin.o	%_bin.h :	%.bin
+#-------------------------------------------------------------------------------
+	@echo $(notdir $<)
+	@$(bin2o)
+
+%.pem.o	%_pem.h :	%.pem
 #-------------------------------------------------------------------------------
 	@echo $(notdir $<)
 	@$(bin2o)
