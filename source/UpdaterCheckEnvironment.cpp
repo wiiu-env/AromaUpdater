@@ -21,6 +21,13 @@ ApplicationState::eSubState UpdaterState::UpdateCheckEnvironmentDirectory(Input 
         this->mState = STATE_CHECK_VERSIONS;
         return SUBSTATE_RUNNING;
     }
+
+    if (this->mCurEnvironmentPath == DEFAULT_TIRAMISU_ENVIRONMENT_SD_PATH) {
+        mCurEnvironmentPath = DEFAULT_AROMA_ENVIRONMENT_SD_PATH;
+        this->mState        = STATE_CHECK_VERSIONS;
+        return SUBSTATE_RUNNING;
+    }
+
     if (buttonPressed(input, Input::BUTTON_A)) {
         std::string sNeedle  = DEFAULT_AROMA_ENVIRONMENT_PATH;
         std::string sReplace = this->mCurEnvironmentPath;

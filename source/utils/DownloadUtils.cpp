@@ -1,15 +1,12 @@
 #include "DownloadUtils.h"
-#include "../common.h"
-#include "FSUtils.h"
+#include "cacert_pem.h"
 #include "logger.h"
 #include <coreinit/cache.h>
 #include <curl/curl.h>
 
 #define IO_BUFSIZE (128 * 1024) // 128 KB
 
-bool DownloadUtils::libInitDone         = false;
-uint8_t *DownloadUtils::cacert_pem      = nullptr;
-uint32_t DownloadUtils::cacert_pem_size = 0;
+bool DownloadUtils::libInitDone = false;
 
 static int initSocket(void *ptr, curl_socket_t socket, curlsocktype type) {
     int o = 1;
@@ -64,14 +61,6 @@ bool DownloadUtils::Init() {
         return false;
     }
 
-    cacert_pem      = nullptr;
-    cacert_pem_size = 0;
-    if (LoadFileToMem(CERT_FILE_LOCATION, &cacert_pem, &cacert_pem_size) < 0) {
-        DEBUG_FUNCTION_LINE_ERR("Failed to load cert");
-        cacert_pem      = nullptr;
-        cacert_pem_size = 0;
-    }
-
     libInitDone = true;
     return true;
 }
@@ -81,11 +70,6 @@ void DownloadUtils::Deinit() {
         return;
     }
 
-    if (cacert_pem != nullptr) {
-        free(cacert_pem);
-        cacert_pem      = nullptr;
-        cacert_pem_size = 0;
-    }
     curl_global_cleanup();
     libInitDone = false;
 }
@@ -102,20 +86,13 @@ int DownloadUtils::DownloadFileToBuffer(const std::string &url, std::string &out
         return -1;
     }
 
-    if (cacert_pem != nullptr) {
-        struct curl_blob blob {};
-        blob.data  = (void *) cacert_pem;
-        blob.len   = cacert_pem_size;
-        blob.flags = CURL_BLOB_COPY;
+    struct curl_blob blob {};
+    blob.data  = (void *) cacert_pem;
+    blob.len   = cacert_pem_size;
+    blob.flags = CURL_BLOB_COPY;
 
-        // Use the certificate bundle in the data
-        curl_easy_setopt(curl, CURLOPT_CAINFO_BLOB, &blob);
-    } else {
-        errorOut     = 0x13371337;
-        errorTextOut = "cacert.pem is not loaded";
-        DEBUG_FUNCTION_LINE_ERR("Warning, missing certificate.");
-        return -4;
-    }
+    // Use the certificate bundle in the data
+    curl_easy_setopt(curl, CURLOPT_CAINFO_BLOB, &blob);
 
     // Enable optimizations
     curl_easy_setopt(curl, CURLOPT_SOCKOPTFUNCTION, initSocket);
