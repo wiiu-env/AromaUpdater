@@ -156,6 +156,10 @@ ApplicationState::eSubState UpdaterState::update(Input *input) {
         }
         case STATE_UPDATE_SUCCESS: {
             if (buttonPressed(input, Input::BUTTON_A)) {
+                if (gDeleteDefaultEnvironmentOnSuccess) {
+                    // Delete default environment when installing from Tiramisu
+                    remove("fs:/vol/external01/wiiu/environments/default.cfg");
+                }
                 OSLaunchTitlel(0xffffffff, 0xfffffffe, 0, nullptr);
                 return SUBSTATE_RESTART;
             }
