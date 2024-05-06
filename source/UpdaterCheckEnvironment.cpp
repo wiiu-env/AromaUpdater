@@ -23,8 +23,9 @@ ApplicationState::eSubState UpdaterState::UpdateCheckEnvironmentDirectory(Input 
     }
 
     if (this->mCurEnvironmentPath == DEFAULT_TIRAMISU_ENVIRONMENT_SD_PATH) {
-        mCurEnvironmentPath = DEFAULT_AROMA_ENVIRONMENT_SD_PATH;
-        this->mState        = STATE_CHECK_VERSIONS;
+        gDeleteDefaultEnvironmentOnSuccess = true;
+        mCurEnvironmentPath                = DEFAULT_AROMA_ENVIRONMENT_SD_PATH;
+        this->mState                       = STATE_CHECK_VERSIONS;
         return SUBSTATE_RUNNING;
     }
 

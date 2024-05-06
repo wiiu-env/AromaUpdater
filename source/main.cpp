@@ -10,6 +10,7 @@
 #include <mocha/mocha.h>
 #include <rpxloader/rpxloader.h>
 #include <sndcore2/core.h>
+#include <sysapp/launch.h>
 #include <whb/proc.h>
 
 void main_loop() {
@@ -34,11 +35,22 @@ void main_loop() {
                 baseInput.combine(wpadInput);
             }
         }
+
         baseInput.process();
-        state->update(&baseInput);
+        if (state->update(&baseInput) == ApplicationState::SUBSTATE_RETURN) {
+            if (RunningFromMiiMaker()) {
+                // legacy way, just quit
+                break;
+            } else {
+                // launch menu otherwise
+                SYSLaunchMenu();
+            }
+        }
         state->render();
     }
 }
+
+bool gDeleteDefaultEnvironmentOnSuccess = false;
 
 int main() {
     initLogging();
@@ -78,6 +90,9 @@ int main() {
         IMDisableAPD();
     }
 
+    if (RunningFromMiiMaker()) {
+        OSEnableHomeButtonMenu(false);
+    }
     main_loop();
 
     if (isAPDEnabled) {
@@ -96,6 +111,9 @@ int main() {
     DrawUtils::DeInit();
 
     AXQuit();
+
+    WHBProcShutdown();
+
     deinitLogging();
 
 
