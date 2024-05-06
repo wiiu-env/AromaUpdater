@@ -61,7 +61,7 @@ ApplicationState::eSubState UpdaterState::UpdateCheckEnvironmentDirectory(Input 
 }
 
 void UpdaterState::RenderCheckEnvironmentDirectory() {
-    if (!this->mCurEnvironmentPath.empty() && this->mCurEnvironmentPath != DEFAULT_AROMA_ENVIRONMENT_SD_PATH) {
+    if (!this->mCurEnvironmentPath.empty() && this->mCurEnvironmentPath != DEFAULT_AROMA_ENVIRONMENT_SD_PATH && (this->mCurEnvironmentPath != DEFAULT_TIRAMISU_ENVIRONMENT_SD_PATH)) {
         DrawUtils::setFontColor(COLOR_RED);
         DrawUtils::setFontSize(30);
         DrawUtils::print(16, 90, "Warning");
