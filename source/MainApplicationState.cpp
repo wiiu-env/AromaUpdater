@@ -64,6 +64,11 @@ ApplicationState::eSubState MainApplicationState::update(Input *input) {
             }
             this->selectedOptionY = 0;
         }
+        if (input->data.buttons_d & Input::BUTTON_HOME) {
+            if (RunningFromMiiMaker()) {
+                return SUBSTATE_RETURN;
+            }
+        }
 
     } else if (this->state == STATE_DO_SUBSTATE) {
         auto retSubState = this->subState->update(input);

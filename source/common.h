@@ -1,5 +1,7 @@
 #pragma once
 
+#include <coreinit/title.h>
+
 #define BACKGROUND_COLOR                     COLOR_BLACK
 
 #define AROMA_DOWNLOAD_URL                   "https://aroma.foryour.cafe/"
@@ -14,3 +16,9 @@
 
 #define UPDATER_VERSION                      "v0.2.3"
 #define UPDATER_VERSION_FULL                 UPDATER_VERSION UPDATER_VERSION_EXTRA
+
+inline bool RunningFromMiiMaker() {
+    return (OSGetTitleID() & 0xFFFFFFFFFFFFF0FFull) == 0x000500101004A000ull;
+}
+
+extern bool gDeleteDefaultEnvironmentOnSuccess;
